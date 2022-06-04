@@ -15,19 +15,18 @@ public class CommonUtils {
         this.faker = new Faker();
     }
 
-    public String randomZipCode() {
+    public  String randomZipCode(){
         return faker.address().zipCode().substring(0, 5);
     }
 
-    public String randomPhoneNumber() {
+    public  String randomPhoneNumber(){
         return String.format("(%03d) %03d-%04d",
-                (int) Math.floor(999 * Math.random()),
-                (int) Math.floor(999 * Math.random()),
-                (int) Math.floor(9999 * Math.random()));
+                (int) Math.floor(999*Math.random()),
+                (int) Math.floor(999*Math.random()),
+                (int) Math.floor(9999*Math.random()));
     }
 
-    public String generateRandomString(int limit) {
-
+    public  String generateRandomString(int limit){
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toLowerCase();
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
@@ -37,52 +36,49 @@ public class CommonUtils {
         }
         String saltStr = salt.toString();
         return saltStr;
-
     }
 
-    public String randomCompanyName() {
+
+    public String randomCompanyName(){
         return faker.company().name();
     }
 
-    public String randomState() {
+    public String randomState(){
         return faker.address().state();
     }
 
-    public String randomCity() {
+    public String randomCity(){
         return faker.address().cityName();
     }
 
-    public String randomStreetAddress() {
+    public String randomStrAddress(){
         return faker.address().streetAddress();
     }
 
-    public int randomNumber(int from, int to) {
-        return (int) (Math.random() * (to - from + 1) + from);
-
+    public int randomNumber(int from, int to){
+        return (int)(Math.random() * (to - from  + 1 ) + from);
     }
 
-    public String randomEmail() {
-        String lastName = faker.name().lastName();
+    public String randomEmail(){
+
+        String lastName = faker.name().lastName(); //random lastname
         String firstName = faker.name().firstName();
-        String[] domain = {"gmail", "yahoo", "hotmail", "icloud"};
+        String[] domain = {"gmail","yahoo","icloud","hotmail"};
         String email = lastName + "." + firstName + "@" + domain[(int) (Math.random() * (4))] + ".com";
         return email.toLowerCase(Locale.ROOT);
-
     }
 
-    public String randomDOBAbove18() {
-        LocalDate startDate = LocalDate.of(1950, 1, 1);//start date
+    public String randomDOB18OrAbove(){
+        LocalDate startDate = LocalDate.of(1950, 1, 1); //start date
         long start = startDate.toEpochDay();
-        LocalDate endDate = LocalDate.of(LocalDate.now().getYear() - 18, 1, 1);
+        LocalDate endDate = LocalDate.of(LocalDate.now().getYear()-18, 1, 1); //end date
         long end = endDate.toEpochDay();
-
         long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
         return LocalDate.ofEpochDay(randomEpochDay).toString();
-
     }
 
-    public String randomPassword() {
-        String SALTCHARS = "ABCDEFGHIaqwertyuioplkjhgfdszxcvbnmJKLMNO$%*&#@!()PQRSTUVWXYZ1234567890".toLowerCase();
+    public String randomPassword(){
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()/1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
         while (salt.length() < 12) { // length of the random string.
@@ -93,6 +89,13 @@ public class CommonUtils {
         return password;
     }
 
+
+    public String randomApartment( ){
+
+        return String.format(("%04d"), (int) Math.floor(9999*Math.random()));
+
+
+    }
 
 
 }

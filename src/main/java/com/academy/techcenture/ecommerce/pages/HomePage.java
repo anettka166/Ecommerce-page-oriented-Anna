@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 
 public class HomePage {
@@ -18,9 +19,11 @@ public class HomePage {
     //all user actions by using methods
 
     private WebDriver driver;
+    private SoftAssert softAssert;
 
-    public HomePage(WebDriver driver){
+    public HomePage(WebDriver driver, SoftAssert softAssert){
         this.driver = driver;
+        this.softAssert = softAssert;
         PageFactory.initElements(driver, this);
     }
 
@@ -36,13 +39,13 @@ public class HomePage {
 
     //user actions with assertions and validations
     public void clickSingInLink(){
-        Assert.assertTrue(signInLink.isDisplayed(), "Sign in link was not displayed");
+        softAssert.assertTrue(signInLink.isDisplayed(), "Sign in link was not displayed");
         signInLink.click();
         System.out.println("clicking sign in link");
     }
 
     public void clickContactUsLink(){
-        Assert.assertTrue(contactUsLink.isDisplayed(), "Contact us link is not displayed");
+        softAssert.assertTrue(contactUsLink.isDisplayed(), "Contact us link is not displayed");
         contactUsLink.click();
         System.out.println("clicking contact us link");
     }
@@ -56,7 +59,7 @@ public class HomePage {
     }
 
 
-
 }
+
 
 

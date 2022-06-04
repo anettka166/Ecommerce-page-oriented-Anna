@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 import java.util.List;
 
@@ -15,9 +16,11 @@ public class UserAccountPage {
     //4. assertions
 
     private WebDriver driver;
+    private SoftAssert softAssert;
 
-    public UserAccountPage(WebDriver driver) {
+    public UserAccountPage(WebDriver driver, SoftAssert softAssert) {
         this.driver = driver;
+        this.softAssert = softAssert;
         PageFactory.initElements(driver, this);
     }
 
@@ -47,24 +50,23 @@ public class UserAccountPage {
 
     //actions
     public void signOut(){
-        Assert.assertTrue(signOutLink.isDisplayed(), "Sign out is not displayed");
+        softAssert.assertTrue(signOutLink.isDisplayed(), "Sign out is not displayed");
         signOutLink.click();
         System.out.println("Clicking sign out");
     }
 
     public void verifyAccountOptions(){
-        Assert.assertEquals(5, accountOptions.size());
+        softAssert.assertEquals(5, accountOptions.size());
         for (int i = 0; i < accountOptions.size(); i++) {
-            Assert.assertEquals(accountOptions.get(i).getText().toLowerCase(), accountOptionsExpected[i],
+            softAssert.assertEquals(accountOptions.get(i).getText().toLowerCase(), accountOptionsExpected[i],
                     "account option did not match " + accountOptionsExpected[i]);
         }
     }
 
     public void navigateHome(){
-        Assert.assertTrue(homeBtn.isDisplayed());
+        softAssert.assertTrue(homeBtn.isDisplayed());
         homeBtn.click();
     }
-
 
 
 
