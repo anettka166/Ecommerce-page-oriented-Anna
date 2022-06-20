@@ -43,6 +43,4 @@ public class ConfigReader {
         System.out.println(properties.getProperty("orderNumber"));
     }
 
-
-
 }

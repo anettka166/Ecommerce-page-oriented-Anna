@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="SMOKE TEST SUITE">
+    <test name="SMOTE TESTS">
+        <classes>
+            <class name="com.academy.techcenture.ecommerce.e2e.UserLoginTest"></class>
+            <class name="com.academy.techcenture.ecommerce.e2e.ContactUsTest"></class>
+            <class name="com.academy.techcenture.ecommerce.e2e.SearchFunctionalityTest"></class>
+            <class name="com.academy.techcenture.ecommerce.e2e.UserRegistrationTest"></class>
+            <class name="com.academy.techcenture.ecommerce.e2e.SocialNetworksTest"></class>
+            <class name="com.academy.techcenture.ecommerce.e2e.ProductVerificationTest"></class>
+        </classes>
+    </test>
+</suite>

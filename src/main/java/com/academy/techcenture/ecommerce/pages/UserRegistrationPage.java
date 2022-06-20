@@ -13,6 +13,7 @@ import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 
 public class UserRegistrationPage {
 
@@ -183,41 +184,34 @@ public class UserRegistrationPage {
     @FindBy(xpath = "//div[contains(@class,'alert-danger')]//li")
     private List<WebElement> alertMsgLists;
 
-
-    private String[] alertExpectedList = {
-            "You must register at least one phone number.",
-            "lastname is required.",
-            "firstname is required.",
-            "passwd is required.",
-            "address1 is required.",
-            "city is required.",
-            "The Zip/Postal code you've entered is invalid. It must follow this format: 00000",
-            "This country requires you to choose a State."};
-
-
-    public void registerUser() {
-        fillOutPersonalDetailsSection();
-        fillOutAddressSection();
+    public void registerUser(Map<String,String> users) {
+        fillOutPersonalDetailsSection(users);
+        fillOutAddressSection(users);
 
 
     }
 
-    private void fillOutPersonalDetailsSection() {
-        //TODO fill out inputs in the personal info section
+    private void fillOutPersonalDetailsSection(Map<String,String> users) {
+
         softAssert.assertTrue(createAnAccountHeader.isDisplayed());
         softAssert.assertEquals(yourPersonalInfoLabel.getText(), "YOUR PERSONAL INFORMATION");
 
-        genderPersonalInput.get(commonUtils.randomNumber(1, 2) - 1).click(); //2
+        if (users.get("title").equals("Mr")){
+            genderPersonalInput.get(0).click();
+        }else{
+            genderPersonalInput.get(1).click();
+        }
 
         softAssert.assertTrue(firstNamePersonalLabel.isDisplayed());
         softAssert.assertTrue(inputFirstNamePersonal.isDisplayed());
 
-        String randomEmail = ConfigReader.getProperty("randomEmail");
-        int atSign = randomEmail.indexOf("@");
-        String[] fullName = randomEmail.substring(0, atSign).split("\\.");
-        String firstName = fullName[1].substring(0, 1).toLowerCase() + fullName[1].substring(1);
-        String lastName = fullName[0].substring(0, 1).toLowerCase() + fullName[1].substring(1);
-        String password = lastName + "123" + firstName.charAt(0) + "!";
+        String newEmail = users.get("email");
+
+        softAssert.assertEquals(inputEmailPersonal.getAttribute("value"), newEmail, "Email Addresses do not match");
+
+        String firstName = users.get("firstName");
+        String lastName = users.get("lastName");
+        String password = users.get("password");
 
         inputFirstNamePersonal.sendKeys(firstName);
         softAssert.assertTrue(lastNameLabelPersonal.isDisplayed());
@@ -232,36 +226,35 @@ public class UserRegistrationPage {
         softAssert.assertEquals(formInfoPersonalLabel.getText(), "(Five characters minimum)");
 
         softAssert.assertTrue(dateOfBirthPersonalLabel.isDisplayed());
-        String dob = commonUtils.randomDOB18OrAbove();
+
+        String dob = users.get("dob"); // 12-May-1950
+
         String[] splitDob = dob.split("-");
-        int dobYear = Integer.parseInt(splitDob[0]);
-        int dobMonth = Integer.parseInt(splitDob[1]);
-        int dobDay = Integer.parseInt(splitDob[2]);
+        int dobYear = Integer.parseInt(splitDob[2]);
+        String dobMonth = splitDob[1] + " "; //05
+        int dobDay = Integer.parseInt(splitDob[0]);
 
         Select select = new Select(yearsDroppedDownPersonal);
         select.selectByValue(String.valueOf(dobYear));
 
         select = new Select(monthsDroppedDownPersonal);
-        select.selectByValue(String.valueOf(dobMonth));
+        select.selectByVisibleText(dobMonth);
 
         select = new Select(daysDroppedDownPersonal);
         select.selectByValue(String.valueOf(dobDay));
 
 
-        if (!inputNewsLettersPersonal.isSelected()) {
+        if (users.get("newsLetter").equals("yes")){
             inputNewsLettersPersonal.click();
         }
-        if (!specialOffersInputPersonal.isSelected()) {
+
+        if (users.get("specialOffers").equals("yes")){
             specialOffersInputPersonal.click();
         }
-
-
-
     }
 
 
-    private void fillOutAddressSection() {
-        //TODO fill Out address section input
+    private void fillOutAddressSection(Map<String,String> users) {
 
         softAssert.assertEquals(yourAddress.getText(), "YOUR ADDRESS");
         softAssert.assertTrue(fistNameAddressLabel.isDisplayed());
@@ -271,42 +264,42 @@ public class UserRegistrationPage {
         inputLastNameAddress.getAttribute("value");
 
         softAssert.assertTrue(companyAddressLabel.isDisplayed());
-        inputCompanyAddress.sendKeys(commonUtils.randomCompanyName());
+        inputCompanyAddress.sendKeys(users.get("company"));
 
         softAssert.assertTrue(address1Label.isDisplayed());
-        input1Address.sendKeys(commonUtils.randomStrAddress());
-        softAssert.assertEquals(address1Txt.getText(), "Street address, P.O. Box, Company name, etc.");
+        input1Address.sendKeys(users.get("address"));
+        softAssert.assertEquals(address1Txt.getText(), users.get("address1Desc"));
 
         softAssert.assertTrue(address2Label.isDisplayed());
-        input2Address.sendKeys(commonUtils.randomApartment());
-        softAssert.assertEquals(address2Txt.getText(), "Apartment, suite, unit, building, floor, etc...");
+        input2Address.sendKeys(users.get("address2"));
+        softAssert.assertEquals(address2Txt.getText(), "address2Desc");
 
         softAssert.assertTrue(cityAddressLabel.isDisplayed());
-        inputCityAddress.sendKeys(commonUtils.randomCity());
+        inputCityAddress.sendKeys(users.get("city"));
 
         softAssert.assertTrue(stateLabelAddress.isDisplayed());
         Select select = new Select(inputStateAddress);
-        select.selectByVisibleText(commonUtils.randomState());
+        select.selectByVisibleText(users.get("state"));
 
         softAssert.assertTrue(postalCodeLabelAddress.isDisplayed());
-        inputPostalCodeAddress.sendKeys(commonUtils.randomZipCode());
+
+        inputPostalCodeAddress.sendKeys(  users.get("zipcode").substring(0, 5) );
 
         softAssert.assertTrue(countryLabelAddress.isDisplayed());
         select = new Select(inputCountryAddress);
         String text = select.getFirstSelectedOption().getText();
-        softAssert.assertEquals(text, "United States");
+        softAssert.assertEquals(text, users.get("country"));
 
         softAssert.assertTrue(additionalInfoAddressLabel.isDisplayed());
-        inputAdditionalInfoAddress.sendKeys(commonUtils.generateRandomString(70));
+        inputAdditionalInfoAddress.sendKeys(users.get("additionalInfo"));
 
         softAssert.assertTrue(mobilePhoneLabel.isDisplayed());
-        inputMobilePhone.sendKeys(commonUtils.randomPhoneNumber());
+        inputMobilePhone.sendKeys(users.get("mobileNumber"));
 
         softAssert.assertTrue(myAddressLabel.isDisplayed());
-        inputMyAddress.sendKeys(commonUtils.randomApartment());
+        inputMyAddress.sendKeys(users.get("addressAlias"));
 
         softAssert.assertTrue(registerAddressBtn.isEnabled());
-
 
         System.out.println("email" + inputEmailPersonal.getAttribute("value"));
         System.out.println("password" + inputPasswdPersonal.getAttribute("value"));
@@ -315,7 +308,7 @@ public class UserRegistrationPage {
     }
 
 
-    public void verifyErrorsOnUserRegisterPage() {
+    public void verifyErrorsOnUserRegisterPage(Map<String,String> users) {
 
         Actions actions = new Actions(driver);
         actions.moveToElement(registerAddressBtn).build().perform();
@@ -324,12 +317,12 @@ public class UserRegistrationPage {
         softAssert.assertTrue(alertLabel.isDisplayed());
         softAssert.assertEquals(alertTxt.getText().trim(), "There are 8 errors");
 
-
+        String errorMessages = users.get("errorMessages");
+        String[] split = errorMessages.split("-");
         for (int i = 0; i < alertMsgLists.size(); i++) {
-            softAssert.assertEquals(alertMsgLists.get(i).getText().trim(), alertExpectedList[i]);
+            softAssert.assertEquals(alertMsgLists.get(i).getText().trim(), split[i].replace("\n","").trim(), "error msg did not match");
 
         }
-
 
     }
 }

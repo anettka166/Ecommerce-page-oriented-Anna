@@ -40,6 +40,11 @@ public class ExcelReader {
             for (int j = 0; j < cols; j++) {
                 //each column name is a key
                 XSSFCell cell = workSheet.getRow(i + 1).getCell(j);// might be null sometimes if the cell is empty
+
+                if (cell == null){
+                    System.out.println();
+                }
+
                 map.put(workSheet.getRow(0).getCell(j).toString(),
                         // each cell under column name will be value
                         cell == null  ? "" : cell.toString() );
@@ -48,8 +53,6 @@ public class ExcelReader {
         }
         return data;
     }
-
-
 
 
 
